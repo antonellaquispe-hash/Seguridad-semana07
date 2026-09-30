@@ -32,10 +32,17 @@ public class DataLoader {
                         return roleRepo.save(r);
                     });
 
+            Role roleManager = roleRepo.findByName("ROLE_MANAGER")
+                    .orElseGet(() -> {
+                        Role r = new Role();
+                        r.setName("ROLE_MANAGER");
+                        return roleRepo.save(r);
+                    });
+
             if (userRepo.findByUsername("user").isEmpty()) {
                 User user = new User();
                 user.setUsername("user");
-                user.setPassword(encoder.encode("1234"));
+                user.setPassword(encoder.encode("User@2026"));
                 user.setRoles(Set.of(roleUser));
                 userRepo.save(user);
             }
@@ -43,12 +50,20 @@ public class DataLoader {
             if (userRepo.findByUsername("admin").isEmpty()) {
                 User admin = new User();
                 admin.setUsername("admin");
-                admin.setPassword(encoder.encode("123456"));
+                admin.setPassword(encoder.encode("Admin@2026"));
                 admin.setRoles(Set.of(roleAdmin));
                 userRepo.save(admin);
             }
 
-            System.out.println("✔ Datos iniciales cargados correctamente");
+            if (userRepo.findByUsername("manager").isEmpty()) {
+                User manager = new User();
+                manager.setUsername("manager");
+                manager.setPassword(encoder.encode("Manager@2026"));
+                manager.setRoles(Set.of(roleManager));
+                userRepo.save(manager);
+            }
+
+            System.out.println("Datos iniciales cargados correctamente");
         };
     }
 }
